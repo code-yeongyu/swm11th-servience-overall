@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-FlatButton servienceRoundedButton(Color color, VoidCallback onPressed, String text) {
+Widget roundedButton(Color color, VoidCallback onPressed, String text) {
   return FlatButton(
     color: color,
     shape: RoundedRectangleBorder(
