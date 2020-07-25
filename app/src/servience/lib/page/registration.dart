@@ -19,21 +19,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("CREATE A NEW ACCOUNT"),
-            Padding(padding: const EdgeInsets.all(20), child:Form(
-              //key: _formKey,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
+            const Text("CREATE A NEW ACCOUNT"),
+            Padding(
+                padding: const EdgeInsets.all(20),
+                child: Form(
+                    //key: _formKey,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
                       outlineBorderTextFormField("Username", false),
-                      Padding(padding: const EdgeInsets.all(10)),
+                      const Padding(padding: const EdgeInsets.all(10)),
                       outlineBorderTextFormField("Password", true),
-                      Padding(padding: const EdgeInsets.all(10)),
+                      const Padding(padding: const EdgeInsets.all(10)),
                       outlineBorderTextFormField("Nickname", false),
-                    ]
-                )
-            )
-            ),
+                    ]))),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: roundedButton(Colors.blue[400], () {}, "Submit"),

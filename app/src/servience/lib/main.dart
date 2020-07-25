@@ -3,14 +3,11 @@ import 'package:servience/page/first.dart';
 import 'package:servience/page/login.dart';
 import 'package:servience/page/registration.dart';
 
-import 'components/button.dart';
-
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

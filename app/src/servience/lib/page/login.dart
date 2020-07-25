@@ -19,19 +19,18 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("LOGIN WITH YOUR ACCOUNT"),
-            Padding(padding: const EdgeInsets.all(20), child:Form(
-              //key: _formKey,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
+            const Text("LOGIN WITH YOUR ACCOUNT"),
+            Padding(
+                padding: const EdgeInsets.all(20),
+                child: Form(
+                    //key: _formKey,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
                       outlineBorderTextFormField("Username", false),
-                      Padding(padding: const EdgeInsets.all(10)),
+                      const Padding(padding: const EdgeInsets.all(10)),
                       outlineBorderTextFormField("Password", true)
-                    ]
-                )
-            )
-            ),
+                    ]))),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: roundedButton(Colors.blue[400], () {}, "Login"),
