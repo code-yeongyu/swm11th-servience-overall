@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 
 String _beautifyPrice(int price) {
   String stringPrice = price.toString();
@@ -14,14 +13,14 @@ String _beautifyPrice(int price) {
   return "₩ " + stringPrice;
 }
 
-Widget menuElement(String image_url, String name, int price) {
+Widget menuItem(String imageUrl, String name, int price) {
   return Container(
       height: 70,
       child: Row(children: <Widget>[
-        image_url != null
+        imageUrl != null
             ? ClipRRect(
                 borderRadius: BorderRadius.circular(50),
-                child: Image.network(image_url),
+                child: Image.network(imageUrl),
               )
             : Container(),
         Padding(
