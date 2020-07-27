@@ -33,7 +33,9 @@ class _LoginPageState extends State<LoginPage> {
                     ]))),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: roundedButton(Colors.blue[400], () {}, "Login"),
+              child: roundedButton(Colors.blue[400], () {
+                Navigator.pushNamed(context, '/menu');
+              }, "Login"),
             ),
           ],
         ),
