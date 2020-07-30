@@ -11,19 +11,21 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
-  var menuInfo = [
-    {
-      "image_url":
-          "https://image.auction.co.kr/itemimage/1a/12/30/1a12307236.jpg",
-      "name": "자바칩 프라푸치노",
-      "price": 6500
-    },
-    {
-      "image_url":
-          "https://lh3.googleusercontent.com/proxy/sRg5n6_QB4ZepcUkhFDmVuW89000Hm1X5C-6ioru1aeJIJWvxiQyHTwMGqmu_2uINcerqFYWmn-ndw3Sc_uknNeSVStpzPt9vAgG_U_n8YLy0iBxtao",
-      "name": "카라멜 프라푸치노",
-      "price": 5600
-    }
+  final List<DrinkItem> items = [
+    DrinkItem("http://image.auction.co.kr/itemimage/18/4a/33/184a334256.jpg",
+        "에스프레소 프라푸치노", 5100),
+    DrinkItem("http://item.ssgcdn.com/93/68/25/item/1000006256893_i1_1200.jpg",
+        "카라멜 프라푸치노", 5600),
+    DrinkItem("http://image.auction.co.kr/itemimage/18/4a/32/184a32a8b6.jpg",
+        "모카 프라푸치노", 5600),
+    DrinkItem("http://image.auction.co.kr/itemimage/18/4a/32/184a3264d6.jpg",
+        "화이트 초콜릿 모카 프라푸치노", 5700),
+    DrinkItem("https://image.auction.co.kr/itemimage/1a/12/30/1a12307236.jpg",
+        "자바칩 프라푸치노", 6500),
+    DrinkItem("http://item.ssgcdn.com/93/14/52/item/1000040521493_i1_1200.jpg",
+        "바닐라 크림 프라푸치노", 4800),
+    DrinkItem("http://item.ssgcdn.com/22/15/52/item/1000040521522_i1_1200.jpg",
+        "초콜릿 크림 칩 프라푸치노", 5700),
   ];
   @override
   Widget build(BuildContext context) {
