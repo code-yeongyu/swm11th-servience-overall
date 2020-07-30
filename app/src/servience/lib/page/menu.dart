@@ -1,5 +1,9 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:servience/components/menu.dart';
+import 'package:servience/models/item.dart';
+import 'package:servience/page/purchasement.dart';
+import 'package:flutter/foundation.dart';
 
 class MenuPage extends StatefulWidget {
   MenuPage({Key key, this.title}) : super(key: key);
@@ -27,22 +31,50 @@ class _MenuPageState extends State<MenuPage> {
     DrinkItem("http://item.ssgcdn.com/22/15/52/item/1000040521522_i1_1200.jpg",
         "초콜릿 크림 칩 프라푸치노", 5700),
   ];
+
+  int _sum = 0;
+  final List<DrinkItem> basket = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Menu")),
-      body: ListView.builder(
-          padding: const EdgeInsets.all(8),
-          itemCount: menuInfo.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              child: Column(children: <Widget>[
-                menuItem(menuInfo[index]["image_url"], menuInfo[index]["name"],
-                    menuInfo[index]["price"]),
-                const Padding(padding: const EdgeInsets.all(4))
-              ]),
-            );
-          }),
-    );
+        appBar: AppBar(title: Text("Menu"), actions: <Widget>[
+          Padding(
+              child: Badge(
+                  badgeContent: Text(
+                    "${basket.length}",
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  child: IconButton(
+                      icon: const Icon(Icons.shopping_cart),
+                      onPressed: () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PurchasementPage(
+                                    basket: this.basket, sum: this._sum),
+                              ),
+                            )
+                          })),
+              padding: EdgeInsets.only(right: 15, bottom: 3, top: 5))
+        ]),
+        body: ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: items.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                  onTap: () {
+                    basket.add(items[index]);
+                    setState(() {
+                      this._sum += items[index].price;
+                    });
+                  },
+                  title: Column(children: <Widget>[
+                    menuItem(items[index].imageURL, items[index].name,
+                        items[index].price),
+                    const Padding(padding: const EdgeInsets.all(4))
+                  ]));
+            })); // change
   }
 }
