@@ -1,17 +1,5 @@
 import 'package:flutter/material.dart';
-
-String _beautifyPrice(int price) {
-  String stringPrice = price.toString();
-  int stringLength = stringPrice.length;
-  if (stringLength > 3) {
-    for (int i = stringLength - 3; i > 0; i -= 3) {
-      stringPrice = stringPrice.substring(0, i) +
-          "," +
-          stringPrice.substring(i, stringLength);
-    }
-  }
-  return "₩ " + stringPrice;
-}
+import 'package:servience/utils/beautifyPrice.dart';
 
 Widget menuItem(String imageUrl, String name, int price) {
   return Container(
@@ -29,7 +17,7 @@ Widget menuItem(String imageUrl, String name, int price) {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(name,
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-              Text("${_beautifyPrice(price)}", textAlign: TextAlign.left)
+              Text("${beautifyPrice(price)}", textAlign: TextAlign.left)
             ]))
       ]));
 }
