@@ -46,10 +46,10 @@ void setup()
   nh.advertise(mag_pub);
   nh.advertise(pub_light_sensor);
 
-  pinMode(16,INPUT);
-  pinMode(17,INPUT);
-  pinMode(18,INPUT);
-  pinMode(19,INPUT);
+  //pinMode(16,INPUT);
+  //pinMode(17,INPUT);
+  //pinMode(18,INPUT);
+  //pinMode(19,INPUT);
   
   tf_broadcaster.init(nh);
 
@@ -137,6 +137,7 @@ void loop()
 #endif
 
    //light sensor
+   
    uint8_t reading = 0;
 
    if(analogRead(16)>500){
