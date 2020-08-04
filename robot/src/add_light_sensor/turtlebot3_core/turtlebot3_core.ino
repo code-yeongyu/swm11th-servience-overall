@@ -46,10 +46,10 @@ void setup()
   nh.advertise(mag_pub);
   nh.advertise(pub_light_sensor);
 
-  //pinMode(16,INPUT);
-  //pinMode(17,INPUT);
-  //pinMode(18,INPUT);
-  //pinMode(19,INPUT);
+  pinMode(12,INPUT);
+  pinMode(13,INPUT);
+  pinMode(14,INPUT);
+  pinMode(15,INPUT);
   
   tf_broadcaster.init(nh);
 
@@ -64,6 +64,7 @@ void setup()
 
   // Setting for ROBOTIS RC100 remote controller and cmd_vel
   controllers.init(MAX_LINEAR_VELOCITY, MAX_ANGULAR_VELOCITY);
+
 
   // Setting for SLAM and navigation (odometry, joint states, TF)
   initOdom();
@@ -137,22 +138,20 @@ void loop()
 #endif
 
    //light sensor
-   
-   uint8_t reading = 0;
-
-   if(analogRead(16)>500){
+   uint8_t reading=0; 
+   if(digitalRead(12)==0){
       reading |= (1<<0);
    }
    
-   if(analogRead(17)>500){
+   if(digitalRead(13)==0){
      reading |= (1<<1);
    }
    
-   if(analogRead(18)>500){
+   if(digitalRead(14)==0){
      reading |= (1<<2);
    }
    
-   if(analogRead(19)>500){
+   if(digitalRead(15)==0){
      reading |= (1<<3);
    }
    
