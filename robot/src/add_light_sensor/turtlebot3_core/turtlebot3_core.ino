@@ -139,19 +139,19 @@ void loop()
 
    //light sensor
    uint8_t reading=0; 
-   if(digitalRead(12)==0){
+   if(digitalRead(12)==1){
       reading |= (1<<0);
    }
    
-   if(digitalRead(13)==0){
+   if(digitalRead(13)==1){
      reading |= (1<<1);
    }
    
-   if(digitalRead(14)==0){
+   if(digitalRead(14)==1){
      reading |= (1<<2);
    }
    
-   if(digitalRead(15)==0){
+   if(digitalRead(15)==1){
      reading |= (1<<3);
    }
    
