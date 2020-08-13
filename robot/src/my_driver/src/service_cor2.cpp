@@ -15,12 +15,15 @@ public:
   ServiceCore()
   {
      ros::Rate loop_rate(3);
-     pub_Pose = nh_.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal",1);
+     pub_Pose = nh_.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal",1); 
      pub_cup_num = nh_.advertise<std_msgs::Byte>("cup_num",1);
      while(ros::ok()){
         while(STATUS==0){
            sub_light_sensor = nh_.subscribe("light_sensor",1,&ServiceCore::get_light_sensor_callback,this);
-           sub_trigger = nh_.subscribe("trigger",1,&ServiceCore::trigger_callback,this); 
+           if(get_light){
+               sub_trigger = nh_.subscribe("trigger",1,&ServiceCore::trigger_callback,this);
+               get_light = 0;
+	   } 
         }
         while(!q.empty()){
            uint8_t num = q.front();
@@ -70,6 +73,7 @@ void get_light_sensor_callback(const std_msgs::Byte& cup_holder){
          while(table_num==0){
 	    sub_table_num = nh_.subscribe("table_num",1,&ServiceCore::get_tablenum_callback,this);
          }
+         get_light = 1;
          break;
       }
    }
@@ -91,6 +95,7 @@ void get_off_sensor_callback(const std_msgs::Byte& cup_holder){
 
 
 private:
+   bool get_light = 0;
    uint8_t STATUS = 0;
    uint8_t pre_cup_holder=0;
    uint8_t table_num = 0;
