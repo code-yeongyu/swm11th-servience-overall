@@ -46,8 +46,8 @@ void setup()
   nh.advertise(mag_pub);
   nh.advertise(pub_light_sensor);
 
-  pinMode(12,INPUT);
-  pinMode(13,INPUT);
+  //pinMode(12,INPUT);
+  //pinMode(13,INPUT);
   pinMode(14,INPUT);
   pinMode(15,INPUT);
   
@@ -138,21 +138,22 @@ void loop()
 #endif
 
    //light sensor
-   uint8_t reading=0; 
+   uint8_t reading=0;
+   /* 
    if(digitalRead(12)==1){
-      reading |= (1<<0);
+      reading |= (1<<3);
    }
    
    if(digitalRead(13)==1){
+     reading |= (1<<2);
+   }*/
+   
+   if(digitalRead(14)==1){
      reading |= (1<<1);
    }
    
-   if(digitalRead(14)==1){
-     reading |= (1<<2);
-   }
-   
    if(digitalRead(15)==1){
-     reading |= (1<<3);
+     reading |= (1<<0);
    }
    
    if((t-tTime[7])>= (1000 / LIGHT_SENSOR_FREQUENCY)){
