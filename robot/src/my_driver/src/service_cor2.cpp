@@ -1,45 +1,125 @@
 #include<string.h>
-#include<sstream>
+#include<iostream>
 #include<queue>
-#include "ros/ros.h"
-#include "std_msgs/String.h"
-#include "actionlib_msgs/GoalStatusArray.h"
-#include "move_base_msgs/MoveBaseActionResult.h"
-#include "geometry_msgs/PoseStamped.h"
-#include "std_msgs/Byte.h"
+#include<ros/ros.h>
+#include<time.h>
+#include<std_msgs/String.h>
+//#include "actionlib_msgs/GoalStatusArray.h"S_
+//#include "move_base_msgs/MoveBaseActionResult.h"
+//#include "geometry_msgs/PoseStamped.h"
+#include<geometry_msgs/Twist.h>
+#include<std_msgs/Byte.h>
+#include<opencv2/highgui/highgui.hpp>
 using namespace std;
+using namespace cv;
 
 class ServiceCore
 {
+	private:
+		bool get_light = 0;
+		uint8_t STATUS = 0;
+		uint8_t pre_cup_holder=0;
+		//uint8_t table_num = 0;
+		uint8_t give = 0;
+		queue<uint8_t>q;
+		/*
+		double targetpose[7][3] = {{0.1,0.1,0.0},{0.869215607643, -5.00192499161, 0.0},{-0.228843331337, -5.19032335281, 0.0},{-1.1484041214, -4.76823806763, 0.0},{-1.87616157532, -3.07519674301, 0.0},{-0.856977939606, -2.94435453415, 0.0},{0.198088169098, -2.80627608299, 0.0}};
+		double targetorient[7][4] = {{0.0,0.0,-0.55,0.55},{0.0, 0.0, -0.63459254249, 0.772846883293},{0.0, 0.0, -0.653903295489, 0.756578138826},{0.0, 0.0, -0.689908353443, 0.723896721812},{0.0, 0.0, 0.788695434872, 0.614784117404},{0.0, 0.0, 0.788695516865, 0.614784012217},{0.0, 0.0, 0.768605342232, 0.639723243202}};*/
+		bool map[384][384];	
+		cv::Mat img;
+		ros::NodeHandle nh_;
+		uchar* pointer;
+		int n;
+		int m;
+
+		//pub
+		ros::Publisher pub_Pose;
+		ros::Publisher pub_cup_num;
+		ros::Publisher pub_cmd_vel; 
+		//ros::Publisher pub_cup_num("cup_num",&cup_num_msg);
+
+		//sub
+		ros::Subscriber sub_trigger;
+		ros::Subscriber sub_light_sensor;
+		ros::Subscriber sub_table_num;
+
+		//msgs
+		std_msgs::Byte cup_num_msg;
+		//geometry_msgs::PoseStamped poseStampedTable;
+		//geometry_msgs::PoseStamped poseStampedCounter;
+		geometry_msgs::Twist Tw;
+
 	public:
 		ServiceCore()
 		{
 			ros::Rate loop_rate(3);
-			pub_Pose = nh_.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal",1); 
+			//pub_Pose = nh_.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal",1); 
+			pub_cmd_vel = nh_.advertise<geometry_msgs::Twist>("/cmd_vel",1);			
 			pub_cup_num = nh_.advertise<std_msgs::Byte>("cup_num",1);
-			while(ros::ok()){
-				while(STATUS==0){
-					sub_light_sensor = nh_.subscribe("light_sensor",1,&ServiceCore::get_light_sensor_callback,this);
-					if(get_light){
-						sub_trigger = nh_.subscribe("trigger",1,&ServiceCore::trigger_callback,this);
-						get_light = 0;
-					} 
+			
+			
+			//load image
+			img = cv::imread("map_11.pgm",CV_LOAD_IMAGE_GRAYSCALE);
+			if(img.empty()){
+				ROS_ERROR("error to load");
+			}
+			n = img.rows;
+			m = img.cols;
+
+			//make map
+			for(int i=0;i<n;i++){
+				pointer = img.ptr<uchar>(i);
+				for(int j=0;j<m;j++){
+					if(pointer[j]<=220){
+						map[i][j] = 1;
+						pointer[j] = 0;
+					}else{
+						map[i][j] = 0;
+						pointer[j] = 255;
+					}			
 				}
-				while(!q.empty()){
-					uint8_t num = q.front();
-					q.pop();
-					dest_setting(num);
-					pub_Pose.publish(poseStampedTable);
-					give=0;
-					while(give==0)sub_light_sensor = nh_.subscribe("light_sensor",1,&ServiceCore::get_off_sensor_callback,this);
-					loop_rate.sleep();
-				}
-				dest_setting(0);//return to base
-				pub_Pose.publish(poseStampedTable);
-				STATUS = 0;
-			}   
+			}
+			
+ 			//print image
+			cv::namedWindow("image");
+			cv::imshow("image",img);
+			cv::waitKey(0);
+
+
+			//move robot
+			Tw.linear.x = 0.0;
+			Tw.linear.y =0.0;
+			Tw.linear.z = 0.0;
+			Tw.angular.x = 0.0;
+			Tw.angular.y = 0.0;
+			Tw.angular.z = 5.0;				
+			pub_cmd_vel.publish(Tw);
+			
+			/*
+			   while(ros::ok()){
+			   while(STATUS==0){
+			   sub_light_sensor = nh_.subscribe("light_sensor",1,&ServiceCore::get_light_sensor_callback,this);
+			   if(get_light){
+			   sub_trigger = nh_.subscribe("trigger",1,&ServiceCore::trigger_callback,this);
+			   get_light = 0;
+			   } 
+			   }
+			   while(!q.empty()){
+			   uint8_t num = q.front();
+			   q.pop();
+			   dest_setting(num);
+			   pub_Pose.publish(poseStampedTable);
+			   give=0;
+			   while(give==0)sub_light_sensor = nh_.subscribe("light_sensor",1,&ServiceCore::get_off_sensor_callback,this);
+			   loop_rate.sleep();
+			   }
+			   dest_setting(0);//return to base
+			   pub_Pose.publish(poseStampedTable);
+			   STATUS = 0;
+			   }*/   
 		}
 
+		/*
 		void dest_setting(uint8_t num){
 			poseStampedTable.pose.position.x = targetpose[num][0];
 			poseStampedTable.pose.position.y = targetpose[num][1];
@@ -92,34 +172,8 @@ class ServiceCore
 			pre_cup_holder = cup_holder.data;
 		}
 
+		*/
 
-
-	private:
-		bool get_light = 0;
-		uint8_t STATUS = 0;
-		uint8_t pre_cup_holder=0;
-		//uint8_t table_num = 0;
-		uint8_t give = 0;
-		queue<uint8_t>q;
-		double targetpose[7][3] = {{0.1,0.1,0.0},{0.869215607643, -5.00192499161, 0.0},{-0.228843331337, -5.19032335281, 0.0},{-1.1484041214, -4.76823806763, 0.0},{-1.87616157532, -3.07519674301, 0.0},{-0.856977939606, -2.94435453415, 0.0},{0.198088169098, -2.80627608299, 0.0}};
-		double targetorient[7][4] = {{0.0,0.0,-0.55,0.55},{0.0, 0.0, -0.63459254249, 0.772846883293},{0.0, 0.0, -0.653903295489, 0.756578138826},{0.0, 0.0, -0.689908353443, 0.723896721812},{0.0, 0.0, 0.788695434872, 0.614784117404},{0.0, 0.0, 0.788695516865, 0.614784012217},{0.0, 0.0, 0.768605342232, 0.639723243202}};
-
-		ros::NodeHandle nh_;
-
-		//pub
-		ros::Publisher pub_Pose;
-		ros::Publisher pub_cup_num;
-		//ros::Publisher pub_cup_num("cup_num",&cup_num_msg);
-
-		//sub
-		ros::Subscriber sub_trigger;
-		ros::Subscriber sub_light_sensor;
-		ros::Subscriber sub_table_num;
-
-		//msgs
-		std_msgs::Byte cup_num_msg;
-		geometry_msgs::PoseStamped poseStampedTable;
-		geometry_msgs::PoseStamped poseStampedCounter;
 };
 
 
