@@ -46,11 +46,12 @@ void setup()
   nh.advertise(mag_pub);
   nh.advertise(pub_light_sensor);
 
-  //pinMode(12,INPUT);
-  //pinMode(13,INPUT);
+  ////pinMode(12,INPUT);
+  ////pinMode(13,INPUT);
+  /*
   pinMode(14,INPUT);
   pinMode(15,INPUT);
-  
+  */
   tf_broadcaster.init(nh);
 
   // Setting for Dynamixel motors
@@ -91,13 +92,13 @@ void loop()
   if ((t-tTime[0]) >= (1000 / CONTROL_MOTOR_SPEED_FREQUENCY))
   {
     updateGoalVelocity();
-    if ((t-tTime[6]) > CONTROL_MOTOR_TIMEOUT) 
-    {
-      motor_driver.controlMotor(WHEEL_RADIUS, WHEEL_SEPARATION, zero_velocity);
-    } 
-    else {
-      motor_driver.controlMotor(WHEEL_RADIUS, WHEEL_SEPARATION, goal_velocity);
-    }
+    //if ((t-tTime[6]) > CONTROL_MOTOR_TIMEOUT) 
+    //{
+    //  motor_driver.controlMotor(WHEEL_RADIUS, WHEEL_SEPARATION, zero_velocity);
+    //} 
+    //else {
+    motor_driver.controlMotor(WHEEL_RADIUS, WHEEL_SEPARATION, goal_velocity);
+    //}
     tTime[0] = t;
   }
 
@@ -136,7 +137,7 @@ void loop()
     tTime[5] = t;
   }
 #endif
-
+   
    //light sensor
    uint8_t reading=0;
    /* 
@@ -147,7 +148,7 @@ void loop()
    if(digitalRead(13)==1){
      reading |= (1<<2);
    }*/
-   
+   /*
    if(digitalRead(14)==1){
      reading |= (1<<1);
    }
@@ -161,7 +162,7 @@ void loop()
      pub_light_sensor.publish(&light_sensor_msg);
      tTime[7] =t;
    }
-
+  */
    //
 
   // Send log message after ROS connection
