@@ -10,6 +10,8 @@ using namespace web::http::client;          // HTTP client features
 using namespace concurrency::streams;       // Asynchronous streams
 using namespace std;
 
+void GetHttp();
+
 int main(int argc, char* argv[])
 {
     websocket_client client;
@@ -18,6 +20,8 @@ int main(int argc, char* argv[])
     printf("connet!!\n");
     
     std::cout<<client.uri().to_string()<<'\n';  // uri check
+
+    GetHttp();
 
 
     /*
@@ -35,4 +39,14 @@ int main(int argc, char* argv[])
     client.close();
     printf("close\n");
     return 0;
+}
+
+void GetHttp()
+{
+	http_client client(U("http://3.35.95.187:3000/order"));
+	auto resp = client.request(U("POST")).get();
+ 
+	wcout << U("STATUS : ") << resp.status_code() << endl;
+	cout << "content-type : " << resp.headers().content_type() << endl;
+	cout << resp.extract_string(true).get() << endl;
 }
