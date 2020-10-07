@@ -22,7 +22,8 @@ using namespace web::http::client;          // HTTP client features
 using namespace concurrency::streams;       // Asynchronous streams
 using namespace std;
 
-void SendCupNumber(const master::Pair& _num);
+void SendCupNumberOn(const std_msgs::Int32& _num);
+void SendCupNumberOff(const std_msgs::Int32& _num);
 void GetJson();
 void RecieveOrderList();
 
@@ -56,7 +57,7 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-void SendCupNumberOn(const master::Int32& _num)
+void SendCupNumberOn(const std_msgs::Int32& _num)
 {
 	int num = _num;
 	http_client client(U("http://3.35.95.187:3000"));
@@ -83,7 +84,7 @@ void SendCupNumberOn(const master::Int32& _num)
 	ROS_INFO("finish sending cup number to server");
 }
 
-void SendCupNumberOff(const master::Int32& _num)
+void SendCupNumberOff(const std_msgs::Int32& _num)
 {
 	int num = _num;
 	http_client client(U("http://3.35.95.187:3000"));
@@ -147,7 +148,10 @@ void RecieveOrderList()
 	client.receive().then([](websocket_incoming_message msg){
 			return msg.extract_string();
 			}).then([](string body){
-				cout<<body<<endl;
+				boost::property_tree::ptree pt;
+				std::istringstream is(body);
+				boost::property_tree::read_json(is,pt);
+				cout<<pt.get<string>("type")<<'\n';
 				});
 	client.close();
 }
