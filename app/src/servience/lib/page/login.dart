@@ -12,6 +12,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String username;
+  String password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,9 +30,11 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                      outlineBorderTextFormField("Username", false),
+                      outlineBorderTextFormField(
+                          "Username", true, (text) => username = text),
                       const Padding(padding: const EdgeInsets.all(10)),
-                      outlineBorderTextFormField("Password", true)
+                      outlineBorderTextFormField(
+                          "Password", false, (text) => password = text)
                     ]))),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),

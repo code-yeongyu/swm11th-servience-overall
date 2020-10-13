@@ -1,6 +1,9 @@
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:servience/components/button.dart';
 import 'package:servience/components/textField.dart';
+import 'package:servience/config/baseURL.dart';
+import 'package:flutter/foundation.dart';
 
 class RegistrationPage extends StatefulWidget {
   RegistrationPage({Key key, this.title}) : super(key: key);
@@ -12,6 +15,22 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  String username;
+  String password;
+  String nickname;
+
+  Future<int> _requestRegistration() async {
+    if (username == null || password == null || nickname == null) {
+      return 0;
+    }
+    final response = await http.post(baseURL + "/user/register", body: {
+      "username": username,
+      "password": password,
+      "nickname": nickname
+    });
+    return response.statusCode;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,15 +46,58 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                      outlineBorderTextFormField("Username", false),
+                      outlineBorderTextFormField(
+                          "Username", true, (text) => username = text),
                       const Padding(padding: const EdgeInsets.all(10)),
-                      outlineBorderTextFormField("Password", true),
+                      outlineBorderTextFormField(
+                          "Password", false, (text) => password = text),
                       const Padding(padding: const EdgeInsets.all(10)),
-                      outlineBorderTextFormField("Nickname", false),
+                      outlineBorderTextFormField(
+                          "Nickname", true, (text) => nickname = text),
                     ]))),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: roundedButton(Colors.blue[400], () {}, "Submit"),
+              child: roundedButton(Colors.blue[400], () {
+                _requestRegistration().then((statusCode) {
+                  AlertDialog alert;
+                  if (statusCode == 201) {
+                    Widget okButton = FlatButton(
+                      child: Text("OK"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                    );
+                    alert = AlertDialog(
+                      title: Text("회원가입 성공"),
+                      content: Text("회원가입에 성공하였습니다."),
+                      actions: [
+                        okButton,
+                      ],
+                    );
+                  } else {
+                    Widget okButton = FlatButton(
+                      child: Text("OK"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                    alert = AlertDialog(
+                      title: Text("회원가입 실패"),
+                      content: Text("회원가입에 실패하였습니다."),
+                      actions: [
+                        okButton,
+                      ],
+                    );
+                  }
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
+                });
+              }, "Submit"),
             ),
           ],
         ),

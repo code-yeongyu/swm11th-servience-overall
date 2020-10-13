@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:servience/components/menu.dart';
 import 'package:servience/models/item.dart';
 import 'package:servience/utils/beautifyPrice.dart';
@@ -43,7 +44,19 @@ class _PurchasementPageState extends State<PurchasementPage> {
                   // navigator hack: to pop thanks page and the purchasement page at the same time.
                 });
               },
-              child: Text("Total ${beautifyPrice(this._getSum())}")),
+              child: Row(children: [
+                SizedBox(
+                    width: 100,
+                    child: TextField(
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        ],
+                        decoration: InputDecoration(
+                          hintText: "Table ID",
+                        ))),
+                Text("Total ${beautifyPrice(this._getSum())}")
+              ])),
         ),
         appBar: AppBar(title: Text("Purchase")),
         body: ListView.builder(
