@@ -1,9 +1,11 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:servience/components/button.dart';
 import 'package:servience/components/textField.dart';
 import 'package:servience/config/baseURL.dart';
 import 'package:flutter/foundation.dart';
+import 'package:servience/models/providerModels.dart';
 
 class RegistrationPage extends StatefulWidget {
   RegistrationPage({Key key, this.title}) : super(key: key);
@@ -31,8 +33,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return response.statusCode;
   }
 
+  void gotoMenuPage(BuildContext context) async {
+    await Navigator.pushReplacementNamed(context, '/menu');
+  }
+
+  void loadMenuPage(BuildContext context) {
+    Future.microtask(() {
+      if (Provider.of<LoginStatus>(context, listen: false).isLoggedIn == true) {
+        gotoMenuPage(context);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    loadMenuPage(context);
     return Scaffold(
       body: Center(
         child: Column(
