@@ -1,9 +1,14 @@
-import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:servience/components/menu.dart';
 import 'package:servience/models/item.dart';
 import 'package:servience/utils/beautifyPrice.dart';
+import 'package:http/http.dart' as http;
+import 'package:servience/config/baseURL.dart';
+import 'package:servience/models/providerModels.dart';
+import 'package:provider/provider.dart';
 
 class PurchasementPage extends StatefulWidget {
   final List<DrinkItem> basket;
@@ -18,6 +23,32 @@ class PurchasementPage extends StatefulWidget {
 class _PurchasementPageState extends State<PurchasementPage> {
   final List<DrinkItem> basket;
   int sum;
+  int tableID;
+
+  Future<int> _requestPurchasement() async {
+    if (tableID == null) {
+      return 0;
+    }
+    final provider = Provider.of<LoginStatus>(context, listen: false);
+    final items = [];
+    this.basket.forEach((element) {
+      items.add(element.name);
+    });
+
+    final response = await http.post(baseURL + "/order",
+        headers: {
+          "Authorization": "jwt " + provider.jwtToken,
+          "Content-Type": "application/json"
+        },
+        body: json.encode({
+          "store_id": "Servience 1th",
+          "table_id": tableID,
+          "menu": items,
+        }));
+    // dealing with response
+    return response.statusCode;
+  }
+
   _PurchasementPageState({@required this.basket, @required this.sum});
 
   int _getSum() {
@@ -34,16 +65,70 @@ class _PurchasementPageState extends State<PurchasementPage> {
         bottomNavigationBar: SizedBox(
           width: double.infinity,
           child: RaisedButton(
-              color: Colors.amber,
-              onPressed: () {
-                Navigator.pushNamed(context, '/thanks');
-                Timer(Duration(seconds: 3), () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  // navigator hack: to pop thanks page and the purchasement page at the same time.
-                });
-              },
-              child: Text("Total ${beautifyPrice(this._getSum())}")),
+            color: Colors.amber,
+            onPressed: () {
+              _requestPurchasement().then((statusCode) {
+                Widget okButton = FlatButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                );
+                if (statusCode == 0) {
+                  AlertDialog alert = AlertDialog(
+                    title: Text("주문 실패"),
+                    content: Text("Table ID를 채워주세요."),
+                    actions: [
+                      okButton,
+                    ],
+                  );
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
+                  return;
+                } else if (statusCode == 200) {
+                  Navigator.pushReplacementNamed(context, '/thanks');
+                  return;
+                } else {
+                  AlertDialog alert = AlertDialog(
+                    title: Text("주문 실패"),
+                    content: Text("잠시후 재 시도해주세요."),
+                    actions: [
+                      okButton,
+                    ],
+                  );
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
+                  );
+                }
+              });
+            },
+            child: Row(
+              children: [
+                SizedBox(
+                    width: 100,
+                    child: TextField(
+                        onChanged: (content) {
+                          debugPrint(content.runtimeType.toString());
+                          tableID = int.parse(content);
+                        },
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        ],
+                        decoration: InputDecoration(
+                          hintText: "Table ID",
+                        ))),
+                Text("Total ${beautifyPrice(this._getSum())}")
+              ],
+            ),
+          ),
         ),
         appBar: AppBar(title: Text("Purchase")),
         body: ListView.builder(
