@@ -1,6 +1,55 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:servience/config/baseURL.dart';
+import 'package:servience/utils/sharedPreferencesAccesor.dart';
+import 'package:servience/models/providerModels.dart';
 
-class FirstUserPage extends StatelessWidget {
+class FirstUserPage extends StatefulWidget {
+  _FirstUserPageState createState() => _FirstUserPageState();
+  FirstUserPage({Key key}) : super(key: key);
+}
+
+class _FirstUserPageState extends State<FirstUserPage> {
+  Future<String> _requestLogin(String username, String password) async {
+    final response = await http.post(baseURL + "/user/auth",
+        body: {"username": username, "password": password});
+    return response.statusCode == 200
+        ? jsonDecode(response.body)['token']
+        : null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getIsLoggedIn().then((isLoggedIn) {
+      if (isLoggedIn) {
+        var loginStatus = Provider.of<LoginStatus>(context, listen: false);
+        loginStatus.setLoggedIn(isLoggedIn);
+        getLoginStatus().then(
+          (loginStatus) {
+            debugPrint("loginStatus: " + loginStatus.toString());
+            _requestLogin(loginStatus['username'], loginStatus['password'])
+                .then((token) {
+              if (token == null) {
+                var loginStatus =
+                    Provider.of<LoginStatus>(context, listen: false);
+                loginStatus.setLoggedIn(false);
+                setLogout();
+                return;
+              }
+              final loginStatus =
+                  Provider.of<LoginStatus>(context, listen: false);
+              loginStatus.setToken(token);
+            });
+          },
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

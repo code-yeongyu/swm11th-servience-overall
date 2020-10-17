@@ -7,7 +7,7 @@ import 'package:servience/config/baseURL.dart';
 import 'package:servience/components/button.dart';
 import 'package:servience/components/textField.dart';
 import 'package:servience/models/providerModels.dart';
-import 'package:servience/page/menu.dart';
+import 'package:servience/utils/sharedPreferencesAccesor.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -96,6 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                   final loginStatus =
                       Provider.of<LoginStatus>(context, listen: false);
                   loginStatus.setToken(token);
+                  setLogin(username, password);
                   Navigator.pushReplacementNamed(context, '/menu');
                 });
               }, "Login"),
