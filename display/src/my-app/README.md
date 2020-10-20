@@ -1,3 +1,9 @@
+# servience-display-frontend
+
+## Technology Stacks
+- React.js
+- WebSocket
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
