@@ -1,11 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'mobx-react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Root from './client/Root';
 import * as serviceWorker from './serviceWorker';
+import OrderStore from './stores/order'
+
+const orderStore = new OrderStore();
 
 ReactDOM.render(
-  <Root />, document.getElementById('root')
+  <Provider orderStore={orderStore}>
+    <Root />
+  </Provider>,
+  document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change
