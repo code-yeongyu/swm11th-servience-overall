@@ -1,2 +1,5 @@
 export { default as Moving } from './Moving'
 export { default as Setup } from './Setup'
+export { default as Home } from './Home'
+export { default as SelectMenu } from './SelectMenu'
+export { default as ServingList } from './ServingList'
