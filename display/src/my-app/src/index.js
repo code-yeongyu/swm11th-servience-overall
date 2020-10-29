@@ -4,12 +4,10 @@ import { Provider } from 'mobx-react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Root from './client/Root';
 import * as serviceWorker from './serviceWorker';
-import OrderStore from './stores/order'
-
-const orderStore = new OrderStore();
+import stores from './stores'
 
 ReactDOM.render(
-  <Provider orderStore={orderStore}>
+  <Provider {...stores}>
     <Root />
   </Provider>,
   document.getElementById('root')
