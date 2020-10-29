@@ -1,25 +1,35 @@
-import React, {Component} from 'react';
-import './Home.css'
+import React, { Component } from 'react';
 import { Row, Col, Button } from 'reactstrap'
-import Order from 'components/order'
 import { observer, inject } from 'mobx-react'
+import './Home.css'
+import Order from 'components/order'
 
-@inject('orderStore')
+@inject('OrderStore')
 @observer
 class Home extends Component {
+    _renderOrders = orders => {
+        let i = 0
+        const orderComponents = orders.map(order => {
+            return <Col key={++i}><Order tableNumber={order.table_id} name={order.orderer} menu={order.menu} /></Col>
+        });
+        return orderComponents
+    }
+
+    constructor(props) {
+        super(props)
+        const { OrderStore } = props
+        OrderStore.syncOrders()
+        OrderStore.activateWebsocket()
+    }
+
     render() {
-        const { orderStore } = this.props;
+        const { OrderStore } = this.props
         return (
             <div className="home">
                 <Row className="orders-wrapper">
                     <Row className="orders">
-                        <Row xs="3">
-                            <Col><Order /></Col>
-                            <Col><Order /></Col>
-                            <Col><Order /></Col>
-                            <Col><Order /></Col>
-                            <Col><Order /></Col>
-                            <Col><Order /></Col>
+                        <Row xs={OrderStore.orders.length > 2 ? 3 : "auto"}>
+                            { OrderStore.orders ? this._renderOrders(OrderStore.orders) : null }
                         </Row>
                     </Row>
                 </Row>
