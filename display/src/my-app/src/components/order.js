@@ -3,8 +3,9 @@ import { Card, CardBody, CardTitle, CardSubtitle } from 'reactstrap'
 import "./order.css"
 
 const Order = (props) => {
+    let i = 0
     const menuItems = props.menu.map(menu => {
-        return <p>{menu}</p>
+        return <p key={i++}>{menu}</p>
     });
     return (
         <div className="order-card">

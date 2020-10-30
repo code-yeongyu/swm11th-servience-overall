@@ -8,22 +8,46 @@ class OrderStore {
     }
 
     @observable orders = []
+    @observable cup = [false, false, false, false]
+    @observable selectingOrder = false
+    @observable selectedCupID = -1
+    @observable servingQueue = []
     isWebsocketEnabled = false
-
     
 
-    @action
-    addOrder = (element) => {
+    @action _websocketHandler = (event) => {
+        let data = JSON.parse(event.data)
+        if (data.target_object === "ORDER") {
+            return axios.get(baseURL + "/order")
+                .then((response) => response.data)
+                .then((data) => {
+                    this.orders = data.orders
+                }
+                )
+        } else if (data.target_object === "CUP") {
+            for (let i = 0; i < this.cup.length; i++) {
+                if (this.cup[i] !== data.content.status[i]) { // if changes had made in this index
+                    if (this.cup[i]) { // if cup ejected
+                        this.selectingOrder = false
+                        this.selectedCupID = -1
+                        break
+                    } else { // if the value need to be updated from false
+                        this.selectingOrder = true
+                        this.selectedCupID = i
+                        break
+                    }
+                }
+            }
+            return this.cup = data.content.status
+        }
+    }
+    @action addOrder = (element) => {
         this.orders.push(element)
     }
-
-    @action
-    removeOrder = (element) => {
+    @action removeOrder = (element) => {
         this.orders.spilce(element)
     }
-
-    @action
-    syncOrders = () => {
+    @action syncOrders = () => {
         axios.get(baseURL + "/order")
             .then((response) => response.data)
             .then((data) => {
@@ -31,9 +55,7 @@ class OrderStore {
             }
         )
     }
-
-    @action
-    activateWebsocket() {
+    @action activateWebsocket() {
         if (this.isWebsocketEnabled)
             return
         this.isWebsocketEnabled = true
@@ -41,18 +63,29 @@ class OrderStore {
         let websocket = new WebSocket("ws://3.35.95.187:3000/display")
 
         websocket.onopen = function (evt) { 
-            console.log("Connection established")
             let robotID = localStorage.getItem("robotID")
             websocket.send(JSON.stringify({
                 "flag": "auth",
                 "id": robotID ? robotID : "default"
             }))
          }
-        websocket.onmessage = this.syncOrders
+        websocket.onmessage = this._websocketHandler
+        websocket.onerror = () => setTimeout(() => window.location.reload(), 5000)
+        websocket.onclose = () => setTimeout(() => window.location.reload(), 5000)
     }
 
-    getOrders = () => {
-        return this.orders
+    @action doneSelectOrder = () => {
+        this.selectingOrder = false
+    }
+
+    @action addServingQueue(element) {
+        this.servingQueue.push(element)
+    }
+    @action removeServingQueue(index) {
+        this.servingQueue.splice(index, 1)
+    }
+    @action clearServingQueue(element) {
+        this.servingQueue = []
     }
 }
 
