@@ -45,8 +45,8 @@ class Home extends Component {
             <div className="home">
                 <Row className="orders-wrapper">
                     <Row className="orders">
-                        <Row xs={OrderStore.orders.length > 2 ? 3 : "auto"}>
-                            { OrderStore.orders ? this._renderOrders(OrderStore.orders) : null }
+                        <Row xs={OrderStore.getOrders().length > 2 ? 3 : "auto"}>
+                            { OrderStore.getOrders() ? this._renderOrders(OrderStore.getOrders()) : null }
                         </Row>
                     </Row>
                 </Row>

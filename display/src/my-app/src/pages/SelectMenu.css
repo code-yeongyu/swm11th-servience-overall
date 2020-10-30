@@ -12,6 +12,10 @@ body {/* Hide scrollbars */
     padding-left: 80px;
 }
 
+#exitButton {
+    margin: 20px;
+}
+
 .orders-wrapper {
     width: 100vw;
     height: 95vh;

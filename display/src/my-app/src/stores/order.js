@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { observable, action, makeAutoObservable } from 'mobx'
+import { observable, action, makeAutoObservable, toJS, computed } from 'mobx'
 import baseURL from 'config/baseURL'
 
 class OrderStore {
@@ -22,25 +22,46 @@ class OrderStore {
                 .then((response) => response.data)
                 .then((data) => {
                     this.orders = data.orders
-                }
-                )
+                })
         } else if (data.target_object === "CUP") {
             for (let i = 0; i < this.cup.length; i++) {
                 if (this.cup[i] !== data.content.status[i]) { // if changes had made in this index
-                    if (this.cup[i]) { // if cup ejected
-                        this.selectingOrder = false
-                        this.selectedCupID = -1
-                        break
-                    } else { // if the value need to be updated from false
+                    this.cup[i] = data.content.status[i]
+                    if (this.cup[i]) { // if cup inserted
                         this.selectingOrder = true
                         this.selectedCupID = i
-                        break
+                    } else {  // if cup ejected
+                        this.selectingOrder = false
+                        //find one with the cup id from the servingque
+                        for (let i = 0; i < this.servingQueue.length; i++) {
+                            const element = this.servingQueue[i]
+                            if (element.position === this.selectedCupID) {
+                                this.servingQueue.splice(i, 1)
+                                break
+                            }
+                        }
+
+                        this.selectedCupID = -1
                     }
+                    break
                 }
             }
-            return this.cup = data.content.status
         }
     }
+    @computed getOrders = () => {
+        const IDofServingQueue = this.servingQueue.map(order => {
+            return order._id
+        })
+        const waitingOrders = []
+        for (let i = 0; i < this.orders.length; i++) {
+            const order = this.orders[i]
+            if (!IDofServingQueue.includes(order._id)) {
+                waitingOrders.push(order)
+            }
+        }
+        return waitingOrders
+    }
+
     @action addOrder = (element) => {
         this.orders.push(element)
     }

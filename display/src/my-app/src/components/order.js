@@ -8,7 +8,7 @@ const Order = (props) => {
         return <p key={i++}>{menu}</p>
     });
     return (
-        <div className="order-card">
+        <div className="order-card" onClick={props.onClick}>
             <Card>
                 <CardBody>
                     <CardTitle><h2>테이블 {props.tableNumber} - {props.name}</h2></CardTitle>
