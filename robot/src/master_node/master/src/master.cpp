@@ -26,12 +26,9 @@ using namespace web::http;                  // Common HTTP functionality
 using namespace web::http::client;          // HTTP client features
 using namespace concurrency::streams;       // Asynchronous streams
 using namespace std;
-<<<<<<< HEAD
  
 static string id = "id1";
 websocket_client websocketSetting();
-=======
->>>>>>> 05918e388872f26617eadac7424d433d8181e304
 void SendCupNumberOn(const std_msgs::Int32& _num);
 void SendCupNumberOff(const std_msgs::Int32& _num);
 void GetJson();
@@ -58,7 +55,6 @@ int main(int argc, char **argv)
 	ros::init(argc,argv,"master");
 	ros::NodeHandle nh;
 
-<<<<<<< HEAD
 	cout<<"node setting"<<'\n';
 	ros::Subscriber cupnum_on_sub = nh.subscribe("cup_num_on",100,SendCupNumberOn);
 	ros::Subscriber cupnum_off_sub = nh.subscribe("cup_num_off",100,SendCupNumberOff);
@@ -68,7 +64,7 @@ int main(int argc, char **argv)
 
 	ws.receive().then([](websocket_incoming_message msg){
 		return msg.extract_string();
-	}).then([](string body){
+	}).then([=](string body){
 		cout<<body<<'\n';
 		
 	 	vector<int> list;
@@ -87,7 +83,7 @@ int main(int argc, char **argv)
 		for(int i=0;i<list.size();i++)
 			table_list.data.push_back(list[i]);
 		
-		table_pub.publish(&table_list);
+		table_pub.publish(table_list);
 
 		ROS_INFO("publish table list to slave_node");
 	});
@@ -108,16 +104,12 @@ int main(int argc, char **argv)
 	ros::spin();
 
 	ws.close();
-=======
-
->>>>>>> 05918e388872f26617eadac7424d433d8181e304
 
 	return 0;
 }
 
 void SendCupNumberOn(const std_msgs::Int32& _num)
 {
-<<<<<<< HEAD
 	int num = _num.data;
 	ROS_INFO("recieve cup_num_on : %d",num);
 	try{
@@ -137,15 +129,11 @@ void SendCupNumberOn(const std_msgs::Int32& _num)
 		cout<<e.what()<<'\n';
 	}
 	ROS_INFO("finish sending cup number to server");
-=======
-
->>>>>>> 05918e388872f26617eadac7424d433d8181e304
 }
 
 
 void SendCupNumberOff(const std_msgs::Int32& _num)
 {
-<<<<<<< HEAD
 	int num = _num.data;
 	ROS_INFO("recieve cup_num_on : %d",num);
 	try{
@@ -165,15 +153,11 @@ void SendCupNumberOff(const std_msgs::Int32& _num)
 		cout<<e.what()<<'\n';
 	}
 	ROS_INFO("finish sending cup number to server");
-=======
-
->>>>>>> 05918e388872f26617eadac7424d433d8181e304
 }
 
 websocket_client websocketSetting()
 {
 	websocket_client client;
-<<<<<<< HEAD
 	try{
 		websocket_outgoing_message msg;
 		client.connect(U("ws://3.35.95.187:3000/robot")).then([](){
@@ -205,6 +189,4 @@ websocket_client websocketSetting()
 		cout<<e.what()<<'\n';
 	}
 	return client;
-=======
->>>>>>> 05918e388872f26617eadac7424d433d8181e304
 }
