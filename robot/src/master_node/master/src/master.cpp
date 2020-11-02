@@ -26,83 +26,68 @@ using namespace web::http;                  // Common HTTP functionality
 using namespace web::http::client;          // HTTP client features
 using namespace concurrency::streams;       // Asynchronous streams
 using namespace std;
- 
-static string id = "id1";
-websocket_client websocketSetting();
+
+static string id = "servience";
+websocket_callback_client websocketSetting();
 void SendCupNumberOn(const std_msgs::Int32& _num);
 void SendCupNumberOff(const std_msgs::Int32& _num);
 void GetJson();
 void RecieveOrderList();
- 
- 
- 
+
+
+
 web::json::value from_string(string input){
- 
+
 	utility::stringstream_t s;
- 
+
 	s << U(input);
- 
+
 	web::json::value ret = web::json::value::parse(s);
- 
+
 	return ret;
- 
+
 }
- 
- 
- 
+
+
+
 int main(int argc, char **argv)
 {
+	websocket_callback_client ws = websocketSetting();
 	ros::init(argc,argv,"master");
 	ros::NodeHandle nh;
 
-	cout<<"node setting"<<'\n';
+	ROS_INFO("node setting..");
 	ros::Subscriber cupnum_on_sub = nh.subscribe("cup_num_on",100,SendCupNumberOn);
 	ros::Subscriber cupnum_off_sub = nh.subscribe("cup_num_off",100,SendCupNumberOff);
 	ros::Publisher table_pub = nh.advertise<std_msgs::Int32MultiArray>("trigger",100);
+	ROS_INFO("master start");
+	ws.set_message_handler([=](websocket_incoming_message msg){
+			msg.extract_string().then([=](string body){
+					cout<<body<<'\n';
 
-	websocket_client ws = websocketSetting();
+					vector<int> list;
+					web::json::value ret = from_string(body);
+					auto order = ret.at(U("content")).as_object().at(U("orders")).as_array();
 
-	ws.receive().then([](websocket_incoming_message msg){
-		return msg.extract_string();
-	}).then([=](string body){
-		cout<<body<<'\n';
-		
-	 	vector<int> list;
-	 	web::json::value ret = from_string(body);
-	 	auto order = ret.at(U("content")).as_object().at(U("orders")).as_array();
+					//cout<<i.at(0).at(U("_id")).as_string()<<'\n';
 
-	 	//cout<<i.at(0).at(U("_id")).as_string()<<'\n';
+					for(auto Order:order){
+					list.push_back(Order.at(U("table_id")).as_integer());
+					}
 
-	 	for(auto Order:order){
-	    	 list.push_back(Order.at(U("table_id")).as_integer());
-	 	}
+					std_msgs::Int32MultiArray table_list;
+					table_list.data.clear();
 
-		std_msgs::Int32MultiArray table_list;
-		table_list.data.clear();
+					for(int i=0;i<list.size();i++)
+					table_list.data.push_back(list[i]);
 
-		for(int i=0;i<list.size();i++)
-			table_list.data.push_back(list[i]);
-		
-		table_pub.publish(table_list);
+					table_pub.publish(table_list);
 
-		ROS_INFO("publish table list to slave_node");
+					ROS_INFO("publish table list to slave_node");
+			});
 	});
- 
-	// client.connect(U("ws://3.35.95.187:3001")).then([](){});
- 	// client.receive().then([=](websocket_incoming_message msg){
-	//       master::CupNumber cupNumberMsg;
-	//       master::Pair pairMsg;
-	//       cupNumberMsg.data.push_back(pairMsg);
-	//       table_pub.publish(cupNumberMsg);
-	//       return msg.extract_string();
-	//       }).then([](string body){
-	//          cout<<body<<endl;
-	//          });
-
-	cout<<"Master Start"<<'\n';
 
 	ros::spin();
-
 	ws.close();
 
 	return 0;
@@ -155,9 +140,9 @@ void SendCupNumberOff(const std_msgs::Int32& _num)
 	ROS_INFO("finish sending cup number to server");
 }
 
-websocket_client websocketSetting()
+websocket_callback_client websocketSetting()
 {
-	websocket_client client;
+	websocket_callback_client client;
 	try{
 		websocket_outgoing_message msg;
 		client.connect(U("ws://3.35.95.187:3000/robot")).then([](){
@@ -172,17 +157,17 @@ websocket_client websocketSetting()
 
 		msg.set_utf8_message(obj.serialize());
 		client.send(msg).then([](){
-			cout<<"send.."<<'\n';
-		});
+				cout<<"send.."<<'\n';
+				});
 
 		sleep(1);
-
-		client.receive().then([](websocket_incoming_message msg){
-			return msg.extract_string();
-		}).then([](string body){
-			cout<<body<<'\n';
-		});
-
+		/*
+		   client.receive().then([](websocket_incoming_message msg){
+		   return msg.extract_string();
+		   }).then([](string body){
+		   cout<<body<<'\n';
+		   });
+		 */
 		sleep(1);
 	}
 	catch(exception& e){
