@@ -2,17 +2,40 @@ import axios from 'axios'
 import { observable, action, makeAutoObservable, toJS, computed } from 'mobx'
 import baseURL from 'config/baseURL'
 
+const emptyItem = {
+    "menu": [],
+    "serving_status": 0,
+    "table_id": -1,
+    "store_id": "",
+    "orderer": "",
+    "_id": ""
+}
+
 class OrderStore {
     constructor(){
       makeAutoObservable(this)
     }
 
     @observable orders = []
-    @observable cup = [false, false, false, false]
+    @observable cup = [{
+        status: false,
+        item: emptyItem
+    }, {
+        status: false,
+        item: emptyItem
+    }, {
+        status: false,
+        item: emptyItem
+    }, {
+        status: false,
+        item: emptyItem
+    }
+    ]
     @observable selectingOrder = false
     @observable selectedCupID = -1
-    @observable servingQueue = []
-    isWebsocketEnabled = false
+    
+    extractCupFillingStatus = () => this.cup.map(cup => { return cup.status }) // returns list of cupStatus[i].isFilled
+    extractServingQueue = () => this.cup.map(cup => { return cup.item })
     
 
     @action _websocketHandler = (event) => {
@@ -24,23 +47,18 @@ class OrderStore {
                     this.orders = data.orders
                 })
         } else if (data.target_object === "CUP") {
+            const localCup = this.extractCupFillingStatus()
+            const serverCup = data.content.status
             for (let i = 0; i < this.cup.length; i++) {
-                if (this.cup[i] !== data.content.status[i]) { // if changes had made in this index
-                    this.cup[i] = data.content.status[i]
-                    if (this.cup[i]) { // if cup inserted
+                if (localCup[i] !== serverCup[i]) { // if changes had made in this index
+                    this.cup[i].status = data.content.status[i] // update the current cup status of local
+                    if (this.cup[i].status) { // if cup inserted
                         this.selectingOrder = true
                         this.selectedCupID = i
                     } else {  // if cup ejected
                         this.selectingOrder = false
                         //find one with the cup id from the servingque
-                        for (let i = 0; i < this.servingQueue.length; i++) {
-                            const element = this.servingQueue[i]
-                            if (element.position === this.selectedCupID) {
-                                this.servingQueue.splice(i, 1)
-                                break
-                            }
-                        }
-
+                        this.cup[i].item = emptyItem
                         this.selectedCupID = -1
                     }
                     break
@@ -49,7 +67,7 @@ class OrderStore {
         }
     }
     @computed getOrders = () => {
-        const IDofServingQueue = this.servingQueue.map(order => {
+        const IDofServingQueue = this.extractServingQueue().map(order => {
             return order._id
         })
         const waitingOrders = []
