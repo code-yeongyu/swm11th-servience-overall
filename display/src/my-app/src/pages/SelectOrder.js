@@ -11,16 +11,18 @@ import './SelectMenu.css'
 @inject('OrderStore')
 @observer
 class SelectOrder extends Component {
+    state = {
+        toMenu: false
+    }
+
     _moveToMenu = (id) => {
-        this.props.history.push('/select_menu/'+id)
+        this.props.history.push('/select_menu/' + this.props.match.params.cup_position + "/" + id)
     }
 
     _renderOrders = orders => {
-        let i = 0
-        const orderComponents = orders.map(order => {
-            console.log(i)
-            return <Col key={i}><Order tableNumber={order.table_id} name={order.orderer} menu={order.menu} onClick={() => {this._moveToMenu(i++)}}/></Col>
-        });
+        const orderComponents = orders.map((order, index) => (
+            <Col key={index}><Order tableNumber={order.table_id} name={order.orderer} menu={order.menu} onClick={() => { this._moveToMenu(index) }} /></Col>
+        ))
         return orderComponents
     }
 
@@ -44,9 +46,13 @@ class SelectOrder extends Component {
             return <Redirect to="/" />
         }
 
-        if (OrderStore.getOrders().length === 1) {
-            return <Redirect to="/select_menu/0" />
+        if (OrderStore.getOrders().length === 0) {
+            return <Redirect to="/" />
         }
+
+        /*if (OrderStore.getOrders().length === 1) {
+            return <Redirect to={`/select_menu/${this.props.match.params.cup_position}/0`} />
+        }*/
 
         return (
             <div className="select-menu">

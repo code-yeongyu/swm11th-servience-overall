@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Row, Col, Button } from 'reactstrap'
+import axios from 'axios'
 import { observer, inject } from 'mobx-react'
 import './Home.css'
 import Order from 'components/order'
+import baseURL from 'config/baseURL'
 
 
 @inject('OrderStore')
@@ -24,6 +26,14 @@ class Home extends Component {
         OrderStore.activateWebsocket()
     }
 
+    requestServe = () => {
+        const { OrderStore } = this.props
+        const IDs = OrderStore.getItemIDs()
+        const body = {
+            order_ids: IDs
+        }
+        axios.post(baseURL + "/serve", body)
+    }
 
     moveToServingList = () => {
         this.props.history.push('/serving_list')
@@ -38,7 +48,7 @@ class Home extends Component {
             return <Redirect to="/setup" />
         }
         if (OrderStore.selectingOrder) {
-            return <Redirect to="/select_order" />
+            return <Redirect to={"/select_order/"+OrderStore.selectedCupID} />
         }
         
         return (
@@ -51,7 +61,7 @@ class Home extends Component {
                     </Row>
                 </Row>
                 <Row className="buttons">
-                    <Col xs="6"><Button color="primary" block>출발</Button></Col>
+                    <Col xs="6"><Button color="primary" block onClick={this.requestServe}>출발</Button></Col>
                     <Col xs="6"><Button color="secondary" block onClick={this.moveToServingList}>예약된 서빙 목록</Button></Col>
                 </Row>
             </div>

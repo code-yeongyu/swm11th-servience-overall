@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Row, Col } from 'reactstrap'
-import Order from 'components/order'
+import Item from 'components/item'
 import { observer, inject } from 'mobx-react'
 import './SelectMenu.css'
 
@@ -11,12 +11,14 @@ import './SelectMenu.css'
 @inject('OrderStore')
 @observer
 class SelectMenu extends Component {
-    _renderOrders = orders => {
-        let i = 0
-        const orderComponents = orders.map(order => {
-            return <Col key={i++}><Order tableNumber={order.table_id} name={order.orderer} menu={order.menu} /></Col>
-        });
-        return orderComponents
+    _renderItems = items => {
+        const itemComponents = items.map((item, index) => (
+            <Col key={index}><Item menu={item} onClick={() => { 
+                
+             }} /></Col>
+        ))
+
+        return itemComponents
     }
 
     constructor(props) {
@@ -30,15 +32,14 @@ class SelectMenu extends Component {
         const isSetted = !!localStorage.getItem("robotID")
         const { OrderStore } = this.props
         const index = this.props.match.params.index
-        const orders = OrderStore.getOrders()
-        const order = orders[index]
+        const cupPosition = this.props.match.params.cup_position
+        const order = OrderStore.getOrders()[index]
 
         if (!order) {
             return (
-                <Redirect to="/setup" />
+                <Redirect to="/" />
             )
         }
-
         const menu = order.menu
 
         if (!isSetted) {
@@ -46,18 +47,15 @@ class SelectMenu extends Component {
                 <Redirect to="/setup" />
             )
         }
+        
         if (!OrderStore.selectingOrder) {
             return <Redirect to="/" />
         }
         
-        if (menu.length === 0) {
-            return <Redirect to="/" />
-        }
-
         if (menu.length === 1) {
-            order.position = OrderStore.selectedCupID
+            order.position = cupPosition
             OrderStore.doneSelectOrder()
-            OrderStore.addServingQueue(order)
+            OrderStore.fillCup(cupPosition, order, menu[1])
         }
 
         return (
@@ -67,8 +65,8 @@ class SelectMenu extends Component {
                 </Row>
                 <Row className="orders-wrapper">
                         <Row className="orders">
-                            <Row xs={OrderStore.getOrders().length > 2 ? 3 : "auto"}>
-                                { OrderStore.getOrders() ? this._renderOrders(OrderStore.getOrders()) : null }
+                            <Row xs={order.menu.length > 2 ? 3 : "auto"}>
+                                { order.menu ? this._renderItems(order.menu) : null }
                             </Row>
                         </Row>
                 </Row>
