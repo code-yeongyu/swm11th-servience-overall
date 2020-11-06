@@ -12,7 +12,7 @@ class App extends Component {
                 <Route path="/select_order/:cup_position" component={SelectOrder} />
                 <Route path="/select_menu/:cup_position/:index" component={SelectMenu} />
                 <Route path="/serving_list" component={ServingList} />
-                <Route path="/cup" component={Cup} />
+                <Route path="/cup/:cup_position" component={Cup} />
             </div>
         )
     }
