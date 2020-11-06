@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { observable, action, makeAutoObservable, toJS, computed } from 'mobx'
+import { observable, action, makeAutoObservable, computed } from 'mobx'
 import baseURL from 'config/baseURL'
 
 const emptyItem = {
@@ -34,9 +34,9 @@ class OrderStore {
     @observable selectingOrder = false
     @observable selectedCupID = -1
     
-    extractCupFillingStatus = () => this.cup.map(cup => { return cup.status }) // returns list of cupStatus[i].isFilled
-    extractServingQueue = () => this.cup.map(cup => { return cup.item })
-    
+    @computed extractCupFillingStatus = () => this.cup.map(cup => { return cup.status }) // returns list of cupStatus[i].isFilled
+    @computed extractServingQueue = () => this.cup.map(cup => { return cup.item })
+    @computed getItemIDs = () => this.cup.map(cup => cup.item._id)
 
     @action _websocketHandler = (event) => {
         let data = JSON.parse(event.data)
@@ -117,14 +117,17 @@ class OrderStore {
         this.selectingOrder = false
     }
 
-    @action addServingQueue(element) {
-        this.servingQueue.push(element)
+    @action fillCup(cupPosition, order) {
+        this.cup[cupPosition] = {
+            ...this.cup[cupPosition],
+            item: order
+        }
     }
-    @action removeServingQueue(index) {
-        this.servingQueue.splice(index, 1)
-    }
-    @action clearServingQueue(element) {
-        this.servingQueue = []
+    @action clearCup(cupPosition) {
+        this.cup[cupPosition] = {
+            ...this.cup[cupPosition],
+            item: emptyItem
+        }
     }
 }
 
