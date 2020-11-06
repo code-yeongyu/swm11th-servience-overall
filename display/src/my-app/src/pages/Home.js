@@ -33,6 +33,7 @@ class Home extends Component {
             order_ids: IDs
         }
         axios.post(baseURL + "/serve", body)
+        this.props.history.push('/moving')
     }
 
     moveToServingList = () => {
