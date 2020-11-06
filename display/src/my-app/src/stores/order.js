@@ -97,6 +97,11 @@ class OrderStore {
     @action activateWebsocket() {
         if (this.isWebsocketEnabled)
             return
+        
+        axios.patch(baseURL + "/cup/reset", {
+            product_id: localStorage.getItem("robotID")
+        })
+        
         this.isWebsocketEnabled = true
 
         let websocket = new WebSocket("ws://3.35.95.187:3000/display")
