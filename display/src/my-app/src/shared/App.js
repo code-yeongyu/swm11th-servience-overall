@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
-import { Home, Moving, Setup, SelectMenu, SelectOrder, ServingList } from 'pages'
+import { Home, Moving, Setup, SelectMenu, SelectOrder, ServingList, Cup } from 'pages'
 
 class App extends Component {
     render() {
@@ -9,9 +9,10 @@ class App extends Component {
                 <Route exact path="/" component={Home} />
                 <Route path="/moving" component={Moving} />
                 <Route path="/setup" component={Setup} />
-                <Route path="/select_order" component={SelectOrder} />
-                <Route path="/select_menu/:index" component={SelectMenu} />
+                <Route path="/select_order/:cup_position" component={SelectOrder} />
+                <Route path="/select_menu/:cup_position/:index" component={SelectMenu} />
                 <Route path="/serving_list" component={ServingList} />
+                <Route path="/cup" component={Cup} />
             </div>
         )
     }

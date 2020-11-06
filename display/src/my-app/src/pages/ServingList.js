@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
-import { Row, Col, Button } from 'reactstrap'
+import { Col, Button } from 'reactstrap'
 import ServingElement from 'components/servingElement'
 import { observer, inject } from 'mobx-react'
 import './SelectMenu.css'
@@ -30,16 +30,19 @@ class SelectMenu extends Component {
             return <Redirect to="/select_order" />
         }
 
+        const cups = OrderStore.extractServingQueue()
+        
         return (
-            <div className="select-menu">
+            <div>
                 <Button id="exitButton" color="danger" size="lg" onClick={() => {this.props.history.push("/")}}>X</Button>
-                <Row className="orders-wrapper">
-                    <Row className="orders">
-                        <Row xs={OrderStore.getOrders().length > 2 ? 3 : "auto"}>
-                            {OrderStore.getOrders() ? this._renderServingElements(OrderStore.servingQueue) : null }
-                        </Row>
-                    </Row>
-                </Row>
+                <div className="outer">
+                    <span class="circle">{cups[0].menu}</span>
+                    <span class="circle">{cups[1].menu}</span>
+                </div>
+                <div className="outer">
+                    <span class="circle">{cups[2].menu}</span>
+                    <span class="circle">{cups[3].menu}</span>
+                </div>
             </div>
         ) 
     }
