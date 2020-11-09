@@ -1,8 +1,7 @@
 .circle {
   display: inline-block;
-  width: 320px;
-  height: 320px;
-  line-height: 300px;
+  width: 225px;
+  height: 225px;
   border: 10px solid black;
   border-radius: 50%;
   display: inline-block;
@@ -10,14 +9,14 @@
   margin-left: 50px;
   margin-right: 50px;
   margin-bottom: 30px;
-  font-size: 2.3rem;
+  padding-top: 50px;
+  font-size: 2rem;
 }
 
 .circle-selected {
   display: inline-block;
-  width: 320px;
-  height: 320px;
-  line-height: 300px;
+  width: 225px;
+  height: 225px;
   border: 10px solid red;
   border-radius: 50%;
   display: inline-block;
@@ -25,7 +24,8 @@
   margin-left: 50px;
   margin-right: 50px;
   margin-bottom: 30px;
-  font-size: 2.3rem;
+  padding-top: 50px;
+  font-size: 2rem;
 }
 
 .outer {
