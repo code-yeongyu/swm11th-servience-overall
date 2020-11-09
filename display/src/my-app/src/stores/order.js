@@ -13,7 +13,7 @@ const emptyItem = {
 
 const defaultArrivedStatus = {
     isArrived: false,
-    cup_id: -1
+    table_id: -1
 }
 
 class OrderStore {
@@ -52,6 +52,15 @@ class OrderStore {
             })
     }
 
+    _getCupIDFromServingQueueByTableID = (tableID) => {
+        const servingQueue = this.extractServingQueue()
+        for (let i = 0; i < servingQueue.length; i++) {
+            if (servingQueue[i].table_id === tableID) {
+                return i
+            }
+        }
+    }
+
     @action _handleCup = (data) => {
         const localCup = this.extractCupFillingStatus()
         const serverCup = data.content.status
@@ -59,15 +68,17 @@ class OrderStore {
         // add handling for when serving
 
         if (this.arrivedStatus.isArrived) {
-            if (localCup[this.movingStatus.cup_id] !== serverCup[this.movingStatus.cup_id]) { // if changes had made in this index
-                this.cup[this.movingStatus.cup_id].status = data.content.status[this.movingStatus.cup_id] // update the current cup status of local
-                if (!this.cup[this.movingStatus.cup_id].status) { // if cup ejected
-                    axios.patch(baseURL+"/order/"+this.cup[this.movingStatus.cup_id]._id)
+            const targetCupID = this._getCupIDFromServingQueueByTableID(this.arrivedStatus.table_id)
+
+            if (localCup[targetCupID] !== serverCup[targetCupID]) { // if changes had made in this index
+                this.cup[targetCupID].status = data.content.status[targetCupID] // update the current cup status of local
+                if (!this.cup[targetCupID].status) { // if cup ejected
+                    axios.patch(baseURL+"/order/"+this.cup[targetCupID]._id)
                     this.cup[i].item = emptyItem
                     this.selectedCupID = -1
                     this.arrivedStatus = {
                         isArrived: false,
-                        cup_id: -1
+                        table_id: -1
                     }
                 }
             }
@@ -93,10 +104,10 @@ class OrderStore {
     }
 
     @action _handleServe = (data) => {
-        const cup_id = data.content.cup_id
+        const table_id = data.content.table_id
         this.arrivedStatus = {
             isArrived: true,
-            cup_id: cup_id
+            table_id: table_id
         } // move to cup notifying page when this.isArrived is true
     }
 
