@@ -11,6 +11,11 @@ const emptyItem = {
     "_id": ""
 }
 
+const defaultArrivedStatus = {
+    isArrived: false,
+    cup_id: -1
+}
+
 class OrderStore {
     constructor(){
       makeAutoObservable(this)
@@ -33,37 +38,76 @@ class OrderStore {
     ]
     @observable selectingOrder = false
     @observable selectedCupID = -1
+    @observable arrivedStatus = defaultArrivedStatus
     
     @computed extractCupFillingStatus = () => this.cup.map(cup => { return cup.status }) // returns list of cupStatus[i].isFilled
     @computed extractServingQueue = () => this.cup.map(cup => { return cup.item })
     @computed getItemIDs = () => this.cup.map(cup => cup.item._id)
 
+    @action _handleOrder = () => {
+        axios.get(baseURL + "/order")
+            .then((response) => response.data)
+            .then((data) => {
+                this.orders = data.orders
+            })
+    }
+
+    @action _handleCup = (data) => {
+        const localCup = this.extractCupFillingStatus()
+        const serverCup = data.content.status
+
+        // add handling for when serving
+
+        if (this.arrivedStatus.isArrived) {
+            if (localCup[this.movingStatus.cup_id] !== serverCup[this.movingStatus.cup_id]) { // if changes had made in this index
+                this.cup[this.movingStatus.cup_id].status = data.content.status[this.movingStatus.cup_id] // update the current cup status of local
+                if (!this.cup[this.movingStatus.cup_id].status) { // if cup ejected
+                    axios.patch(baseURL+"/order/"+this.cup[this.movingStatus.cup_id]._id)
+                    this.cup[i].item = emptyItem
+                    this.selectedCupID = -1
+                    this.arrivedStatus = {
+                        isArrived: false,
+                        cup_id: -1
+                    }
+                }
+            }
+            return
+        }
+
+
+        for (let i = 0; i < this.cup.length; i++) {
+            if (localCup[i] !== serverCup[i]) { // if changes had made in this index
+                this.cup[i].status = data.content.status[i] // update the current cup status of local
+                if (this.cup[i].status) { // if cup inserted
+                    this.selectingOrder = true
+                    this.selectedCupID = i
+                } else {  // if cup ejected
+                    this.selectingOrder = false
+                    //find one with the cup id from the servingque
+                    this.cup[i].item = emptyItem
+                    this.selectedCupID = -1
+                }
+                break
+            }
+        }
+    }
+
+    @action _handleServe = (data) => {
+        const cup_id = data.content.cup_id
+        this.arrivedStatus = {
+            isArrived: true,
+            cup_id: cup_id
+        } // move to cup notifying page when this.isArrived is true
+    }
+
     @action _websocketHandler = (event) => {
         let data = JSON.parse(event.data)
         if (data.target_object === "ORDER") {
-            return axios.get(baseURL + "/order")
-                .then((response) => response.data)
-                .then((data) => {
-                    this.orders = data.orders
-                })
+            this._handleOrder()
         } else if (data.target_object === "CUP") {
-            const localCup = this.extractCupFillingStatus()
-            const serverCup = data.content.status
-            for (let i = 0; i < this.cup.length; i++) {
-                if (localCup[i] !== serverCup[i]) { // if changes had made in this index
-                    this.cup[i].status = data.content.status[i] // update the current cup status of local
-                    if (this.cup[i].status) { // if cup inserted
-                        this.selectingOrder = true
-                        this.selectedCupID = i
-                    } else {  // if cup ejected
-                        this.selectingOrder = false
-                        //find one with the cup id from the servingque
-                        this.cup[i].item = emptyItem
-                        this.selectedCupID = -1
-                    }
-                    break
-                }
-            }
+            this._handleCup(data)
+        } else if (data.target_object === "SERVE") { // when the robot has arrived to the destination
+            this._handleServe(data)
         }
     }
     @computed getOrders = () => {

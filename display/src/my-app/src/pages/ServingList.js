@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { Col, Button } from 'reactstrap'
 import ServingElement from 'components/servingElement'
 import { observer, inject } from 'mobx-react'
+import {toJS} from 'mobx'
 import './SelectMenu.css'
 
 @inject('OrderStore')
@@ -31,17 +32,23 @@ class SelectMenu extends Component {
         }
 
         const cups = OrderStore.extractServingQueue()
+        const items = cups.map(cup => cup.menu+"")
+        const filteredItems = items.map(filtered => {
+            filtered = filtered.split(" ")
+            filtered.splice(1, 0, <br />);
+            return filtered
+        })
         
         return (
             <div>
                 <Button id="exitButton" color="danger" size="lg" onClick={() => {this.props.history.push("/")}}>X</Button>
                 <div className="outer">
-                    <span class="circle">{cups[0].menu}</span>
-                    <span class="circle">{cups[1].menu}</span>
+                    <span className="circle">{filteredItems[0].map(item => item)}</span>
+                    <span className="circle">{filteredItems[1].map(item => item)}</span>
                 </div>
                 <div className="outer">
-                    <span class="circle">{cups[2].menu}</span>
-                    <span class="circle">{cups[3].menu}</span>
+                    <span className="circle">{filteredItems[2].map(item => item)}</span>
+                    <span className="circle">{filteredItems[3].map(item => item)}</span>
                 </div>
             </div>
         ) 
