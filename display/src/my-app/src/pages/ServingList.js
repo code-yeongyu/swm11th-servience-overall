@@ -3,7 +3,6 @@ import { Redirect } from 'react-router-dom'
 import { Col, Button } from 'reactstrap'
 import ServingElement from 'components/servingElement'
 import { observer, inject } from 'mobx-react'
-import {toJS} from 'mobx'
 import './SelectMenu.css'
 
 @inject('OrderStore')
@@ -28,7 +27,7 @@ class SelectMenu extends Component {
             return <Redirect to="/setup" />
         }
         if (OrderStore.selectingOrder) {
-            return <Redirect to="/select_order" />
+            return <Redirect to={"/select_order/"+OrderStore.selectedCupID} />
         }
 
         const cups = OrderStore.extractServingQueue()
@@ -47,8 +46,8 @@ class SelectMenu extends Component {
                     <span className="circle">{filteredItems[1].map(item => item)}</span>
                 </div>
                 <div className="outer">
-                    <span className="circle">{filteredItems[2].map(item => item)}</span>
                     <span className="circle">{filteredItems[3].map(item => item)}</span>
+                    <span className="circle">{filteredItems[2].map(item => item)}</span>
                 </div>
             </div>
         ) 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
-import {toJS} from 'mobx'
+import { Redirect } from 'react-router-dom'
 import './Cup.css'
 
 @inject('OrderStore')
@@ -33,8 +33,8 @@ class Cup extends Component {
                     <span className={cupPosition === 1 ? "circle-selected": "circle"}>{filteredItems[1].map(item => item)}</span>
                 </div>
                 <div className="outer">
-                    <span className={cupPosition === 2 ? "circle-selected": "circle"}>{filteredItems[2].map(item => item)}</span>
                     <span className={cupPosition === 3 ? "circle-selected": "circle"}>{filteredItems[3].map(item => item)}</span>
+                    <span className={cupPosition === 2 ? "circle-selected": "circle"}>{filteredItems[2].map(item => item)}</span>
                 </div>
             </div>
         )

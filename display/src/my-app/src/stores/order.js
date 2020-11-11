@@ -74,7 +74,7 @@ class OrderStore {
                 this.cup[targetCupID].status = data.content.status[targetCupID] // update the current cup status of local
                 if (!this.cup[targetCupID].status) { // if cup ejected
                     axios.patch(baseURL+"/order/"+this.cup[targetCupID]._id)
-                    this.cup[i].item = emptyItem
+                    this.cup[targetCupID].item = emptyItem
                     this.selectedCupID = -1
                     this.arrivedStatus = {
                         isArrived: false,

@@ -19,7 +19,7 @@ class Moving extends Component {
         const { OrderStore } = this.props
         const arrivedStatus = OrderStore.arrivedStatus.isArrived
         if (arrivedStatus.isArrived) {
-            return <Redirect to={"/cup/"+arrivedStatus.cup_id} />
+            return <Redirect to={"/cup/"+arrivedStatus.table_id} />
         }
         
         const servingQueue = OrderStore.extractServingQueue()
@@ -31,7 +31,8 @@ class Moving extends Component {
 
         return (
             <div className="moving full-center">
-                <p>이동중입니다</p>
+                <p>커피가</p>
+                <p>배송중이에요</p>
             </div>
         )
     }
