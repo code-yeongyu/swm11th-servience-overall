@@ -31,6 +31,7 @@ static string id = "servience";
 websocket_callback_client websocketSetting();
 void SendCupNumberOn(const std_msgs::Int32& _num);
 void SendCupNumberOff(const std_msgs::Int32& _num);
+void SendTableNumber(const std_msgs::Int32& _num);
 void GetJson();
 void RecieveOrderList();
 
@@ -59,6 +60,7 @@ int main(int argc, char **argv)
 	ROS_INFO("node setting..");
 	ros::Subscriber cupnum_on_sub = nh.subscribe("cup_num_on",100,SendCupNumberOn);
 	ros::Subscriber cupnum_off_sub = nh.subscribe("cup_num_off",100,SendCupNumberOff);
+	ros::Subscriber send_tableNumber = nh.subscribe("goal_result",100,SendTableNumber);
 	ros::Publisher table_pub = nh.advertise<std_msgs::Int32MultiArray>("trigger",100);
 	ROS_INFO("master start");
 	ws.set_message_handler([=](websocket_incoming_message msg){
@@ -79,7 +81,7 @@ int main(int argc, char **argv)
 					table_list.data.clear();
 
 					for(int i=0;i<list.size();i++)
-					table_list.data.push_back(list[i]);
+					table_list.data.push_back(list[i]+1);
 
 					table_pub.publish(table_list);
 
@@ -102,8 +104,8 @@ void SendCupNumberOn(const std_msgs::Int32& _num)
 		auto request = http_request{methods::PATCH};
 
 		json::value postData;
-		postData["product_id"] = json::value::string("testid");
-		postData["cup_id"] = json::value::number(num);
+		postData["product_id"] = json::value::string(id);
+		postData["cup_id"] = json::value::number(num-1);
 
 		request.set_body(postData);
 
@@ -126,8 +128,8 @@ void SendCupNumberOff(const std_msgs::Int32& _num)
 		auto request = http_request{methods::PATCH};
 
 		json::value postData;
-		postData["product_id"] = json::value::string("testid");
-		postData["cup_id"] = json::value::number(num);
+		postData["product_id"] = json::value::string(id);
+		postData["cup_id"] = json::value::number(num-1);
 
 		request.set_body(postData);
 
@@ -138,6 +140,28 @@ void SendCupNumberOff(const std_msgs::Int32& _num)
 		cout<<e.what()<<'\n';
 	}
 	ROS_INFO("finish sending cup number to server");
+}
+
+void SendTableNumber(const std_msgs::Int32& _num)
+{
+	int num = _num.data;
+	ROS_INFO("recieve table number(%d) is finish",num);
+	try{
+		http_client client(U("http://api.cafeservi.com/order/notify_arrival"));
+		auto request = http_request{methods::POST};
+
+		json::value postData;
+		postData["table_id"] = json::value::number(num-1);
+		
+		request.set_body(postData);
+
+		auto response = client.request(request).get();
+		cout<<response.status_code()<<'\n';
+	}
+	catch(exception& e){
+		cout<<e.what()<<'\n';
+	}
+	ROS_INFO("finish sending finished table number");
 }
 
 websocket_callback_client websocketSetting()
