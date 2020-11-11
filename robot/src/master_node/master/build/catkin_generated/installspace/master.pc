@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: master
+Description: Description of master
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lmaster
+Requires: roscpp std_msgs message_runtime

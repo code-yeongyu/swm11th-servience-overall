@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/ssk807/catkin_ws/src/master/build/devel/setup.sh
