@@ -1,0 +1,33 @@
+.home {
+    width: 100vw;
+    height: 100vh;
+}
+
+body {/* Hide scrollbars */
+    overflow: hidden;
+}
+
+.orders-wrapper {
+    width: 100vw;
+    height: 95vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow:auto;
+}
+
+.orders {
+    width: 100vw;
+    padding: 50px;
+}
+
+.card {
+    padding-top: 10px;
+}
+
+.buttons {
+    width: 100vw;
+    height: 5vh;
+    padding-left: 3vh;
+    position: absolute;
+}

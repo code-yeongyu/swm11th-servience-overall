@@ -1,0 +1,12 @@
+.moving {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.moving p {
+    font-size: 8rem;
+    text-align: center;
+}
