@@ -1,0 +1,8 @@
+prefix=/home/ssk807/catkin_ws/src/master/build/devel
+
+Name: master
+Description: Description of master
+Version: 0.0.0
+Cflags: -I/home/ssk807/catkin_ws/src/master/build/devel/include -I/home/ssk807/catkin_ws/src/master/include
+Libs: -L${prefix}/lib -lmaster
+Requires: roscpp std_msgs message_runtime

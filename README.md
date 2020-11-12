@@ -1,8 +1,25 @@
-# 카페서비 프로젝트
+# 카페서비 로봇 / 앱 / 디스플레이 UI 프로젝트 GitLab
 
-각 프로젝트의 src, test, document 디렉토리에는 각각 소스파일, 테스트코드, 문서가 작성되어 있습니다.  
+## 앱
 
-## 협업 관련 내용
-- git\-flow 를 사용하여 프로젝트를 진행하는 만큼, 해당 내용을 숙지하여 프로젝트를 진행해주세요.
-	- feature을 생성하실때는 [app | server | display\_frontend | bot]\_[feature\_name] 과 같은 방식으로 진행해주세요.
+- Technology Stacks
+  - Flutter
 
+Source Code Path: app/src/servience/lib
+
+## 디스플레이
+
+- Technology Stacks
+  - React.js
+  - mobX
+  - WebSocket
+
+Source Code Path: display/src/my-app
+
+## 로봇
+
+- Technology Stacks
+  - ROS
+  - WebSocket
+
+Source Code Path: robot/src/master

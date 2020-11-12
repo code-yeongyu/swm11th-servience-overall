@@ -1,0 +1,35 @@
+.circle {
+  display: inline-block;
+  width: 225px;
+  height: 225px;
+  border: 10px solid black;
+  border-radius: 50%;
+  display: inline-block;
+  text-align:center;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 30px;
+  padding-top: 50px;
+  font-size: 2rem;
+}
+
+.circle-selected {
+  display: inline-block;
+  width: 225px;
+  height: 225px;
+  border: 10px solid red;
+  border-radius: 50%;
+  display: inline-block;
+  text-align:center;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 30px;
+  padding-top: 50px;
+  font-size: 2rem;
+}
+
+.outer {
+  width:100%;
+  display: flex;
+  justify-content: center;
+}

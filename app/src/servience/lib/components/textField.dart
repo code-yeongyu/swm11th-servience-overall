@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
-Widget outlineBorderTextFormField(String hintText, bool isObservable) {
+Widget outlineBorderTextFormField(
+    String hintText, bool isObservable, ValueChanged<String> onChanged) {
   return TextFormField(
       obscureText: !isObservable,
-      decoration: InputDecoration(hintText: hintText, border: const OutlineInputBorder())
-  );
+      onChanged: onChanged,
+      autocorrect: false,
+      enableSuggestions: false,
+      decoration: InputDecoration(
+          hintText: hintText, border: const OutlineInputBorder()));
 }

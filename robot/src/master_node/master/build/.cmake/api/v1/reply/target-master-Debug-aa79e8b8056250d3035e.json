@@ -1,0 +1,420 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "devel/lib/master/master"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"target_link_libraries",
+			"add_compile_options",
+			"add_definitions",
+			"include",
+			"find_package",
+			"configure_shared_library_build_settings",
+			"include_directories",
+			"gencpp_append_include_dirs",
+			"_generate_msg_cpp",
+			"generate_messages"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt",
+			"/opt/ros/kinetic/share/rosconsole/cmake/rosconsole-extras.cmake",
+			"/opt/ros/kinetic/share/rosconsole/cmake/rosconsoleConfig.cmake",
+			"/opt/ros/kinetic/share/roscpp/cmake/roscppConfig.cmake",
+			"/opt/ros/kinetic/share/catkin/cmake/catkinConfig.cmake",
+			"/opt/ros/kinetic/share/catkin/cmake/tools/libraries.cmake",
+			"/opt/ros/kinetic/share/catkin/cmake/all.cmake",
+			"/opt/ros/kinetic/share/gencpp/cmake/gencpp-extras.cmake",
+			"build/cmake/master-genmsg.cmake",
+			"/opt/ros/kinetic/share/genmsg/cmake/genmsg-extras.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 41,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 43,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 4,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 10,
+				"parent" : 0
+			},
+			{
+				"file" : 4,
+				"parent" : 4
+			},
+			{
+				"command" : 5,
+				"file" : 4,
+				"line" : 76,
+				"parent" : 5
+			},
+			{
+				"file" : 3,
+				"parent" : 6
+			},
+			{
+				"command" : 5,
+				"file" : 3,
+				"line" : 197,
+				"parent" : 7
+			},
+			{
+				"file" : 2,
+				"parent" : 8
+			},
+			{
+				"command" : 4,
+				"file" : 2,
+				"line" : 222,
+				"parent" : 9
+			},
+			{
+				"file" : 1,
+				"parent" : 10
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 12,
+				"parent" : 11
+			},
+			{
+				"command" : 4,
+				"file" : 4,
+				"line" : 20,
+				"parent" : 5
+			},
+			{
+				"file" : 6,
+				"parent" : 13
+			},
+			{
+				"command" : 6,
+				"file" : 6,
+				"line" : 174,
+				"parent" : 14
+			},
+			{
+				"command" : 3,
+				"file" : 5,
+				"line" : 18,
+				"parent" : 15
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 8,
+				"parent" : 11
+			},
+			{
+				"command" : 10,
+				"file" : 0,
+				"line" : 16,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 9,
+				"line" : 307,
+				"parent" : 18
+			},
+			{
+				"file" : 8,
+				"parent" : 19
+			},
+			{
+				"command" : 9,
+				"file" : 8,
+				"line" : 36,
+				"parent" : 20
+			},
+			{
+				"command" : 8,
+				"file" : 7,
+				"line" : 46,
+				"parent" : 21
+			},
+			{
+				"command" : 7,
+				"file" : 7,
+				"line" : 63,
+				"parent" : 22
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 28,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 33,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 34,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g"
+				},
+				{
+					"backtrace" : 3,
+					"fragment" : "-std=c++11"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 12,
+					"define" : "ROSCONSOLE_BACKEND_LOG4CXX"
+				},
+				{
+					"backtrace" : 16,
+					"define" : "ROS_BUILD_SHARED_LIBS=1"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "ROS_PACKAGE_NAME=\"master\""
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 23,
+					"path" : "/home/ssk807/catkin_ws/src/master/build/devel/include"
+				},
+				{
+					"backtrace" : 24,
+					"path" : "/home/ssk807/catkin_ws/src/master/include"
+				},
+				{
+					"backtrace" : 24,
+					"path" : "/opt/ros/kinetic/include"
+				},
+				{
+					"backtrace" : 24,
+					"path" : "/opt/ros/kinetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
+				},
+				{
+					"backtrace" : 24,
+					"path" : "/usr/include/cpprest/http_client.h"
+				},
+				{
+					"backtrace" : 24,
+					"path" : "/usr/include/cpprest/ws_client.h"
+				},
+				{
+					"backtrace" : 25,
+					"path" : "/usr/include/cpprest"
+				},
+				{
+					"backtrace" : 26,
+					"path" : "/home/ssk807/catkin_ws/src/master/msg"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"id" : "master::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-Wl,-rpath,/opt/ros/kinetic/lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/opt/ros/kinetic/lib/libroscpp.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/lib/x86_64-linux-gnu/libboost_filesystem.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/lib/x86_64-linux-gnu/libboost_signals.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/opt/ros/kinetic/lib/librosconsole.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/opt/ros/kinetic/lib/librosconsole_log4cxx.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/opt/ros/kinetic/lib/librosconsole_backend_interface.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/lib/x86_64-linux-gnu/liblog4cxx.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/lib/x86_64-linux-gnu/libboost_regex.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/opt/ros/kinetic/lib/libxmlrpcpp.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/opt/ros/kinetic/lib/libroscpp_serialization.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/opt/ros/kinetic/lib/librostime.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/opt/ros/kinetic/lib/libcpp_common.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/lib/x86_64-linux-gnu/libboost_system.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/lib/x86_64-linux-gnu/libboost_thread.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/lib/x86_64-linux-gnu/libboost_chrono.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/lib/x86_64-linux-gnu/libboost_date_time.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/lib/x86_64-linux-gnu/libboost_atomic.so",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lpthread",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "/usr/lib/x86_64-linux-gnu/libconsole_bridge.so",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lboost_system",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lcrypto",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lssl",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-lcpprest",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "master",
+	"nameOnDisk" : "master",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/master.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "EXECUTABLE"
+}
