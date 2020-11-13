@@ -74,6 +74,7 @@
   "scripts": {
     "start": "cross-env NODE_PATH=src node scripts/start.js",
     "build": "cross-env NODE_PATH=src node scripts/build.js",
+    "deploy": "yarn build;mv build/index.html build/200.html;surge build servience-display.surge.sh",
     "test": "node scripts/test.js"
   },
   "eslintConfig": {
